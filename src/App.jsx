@@ -138,9 +138,12 @@ export default function App() {
         emailConfig.templateId,
         {
           subject: 'FitShapers Invoice',
+          package:data.packageType,
+          startDate:formatDate(data.startDate) ,
+          endDate:formatDate(data.endDate),
           to_name: data.name,
           to_email: data.email,
-          message: `Hi ${data.name || 'Member'},\nThank you for joining FitShapers The Fitness Club.\nYour invoice details are shared below.\nStay consistent and keep pushing 💪`,
+          message: "Thank you for choosing FitShapers The Fitness Club.\n\nYour membership is now active.\nStay consistent, trust the process, and push your limits.\n\nLet’s build a stronger you 💪",
           invoice_number: data.invoiceNo,
           invoice_date: formatDate(data.date),
           amount: data.amount
