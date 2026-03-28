@@ -43,12 +43,12 @@ export default function InvoicePreview({ data, invoiceRef }) {
 
             <div className="relative z-10 mt-3 flex items-end justify-between gap-4">
               <div className="w-[68%] space-y-2">
-                {/* <p className="text-xs font-bold tracking-wide">ADVISORY</p> */}
-                {/* <div className="h-8 rounded border-2 border-zinc-800/80" /> */}
+                <p className="text-xs font-bold tracking-wide">ADVISORY</p>
+                <div className="h-8 rounded border-2 border-zinc-800/80" />
                 <p className="text-sm font-bold">NON REFUNDABLE</p>
-                {/* <div className="h-9 w-full rounded border-2 border-zinc-800 px-3 py-1 text-lg font-bold">
+                <div className="h-9 w-full rounded border-2 border-zinc-800 px-3 py-1 text-lg font-bold">
                   {data.amount ? `₹ ${Number(data.amount).toLocaleString('en-IN')}` : '₹'}
-                </div> */}
+                </div>
                 <div className="h-10 w-full rounded border-2 border-zinc-800 px-3 py-1 text-base font-semibold">
                   {data.amount ? `Amount: ₹ ${Number(data.amount).toLocaleString('en-IN')}` : 'Amount: ₹'}
                 </div>

@@ -6,6 +6,7 @@ import emailjs from '@emailjs/browser';
 import FormPanel from './components/FormPanel';
 import InvoicePreview from './components/InvoicePreview';
 import StepTracker from './components/StepTracker';
+import ToastStack from './components/ToastStack';
 import { formatDate, generateInvoiceNumber } from './utils/invoice';
 
 const defaultState = {
@@ -23,7 +24,14 @@ export default function App() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState(defaultState);
   const [sending, setSending] = useState(false);
+  const [toasts, setToasts] = useState([]);
   const invoiceRef = useRef(null);
+
+  const notify = (message, type = 'success') => {
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => setToasts((prev) => prev.filter((toast) => toast.id !== id)), 3400);
+  };
 
   const emailConfig = useMemo(
     () => ({
@@ -43,14 +51,74 @@ export default function App() {
     return { pdf, blob: pdf.output('blob') };
   };
 
+  const getMissingFields = () => {
+    const requiredFields = [
+      ['name', 'Full Name'],
+      ['contact', 'Contact Number'],
+      ['packageType', 'Package Type'],
+      ['startDate', 'Start Date'],
+      ['endDate', 'End Date'],
+      ['amount', 'Amount']
+    ];
+
+    return requiredFields.filter(([key]) => !String(data[key] ?? '').trim()).map(([, label]) => label);
+  };
+
+  const validateStepOne = () => {
+    if (!data.name.trim() || !data.contact.trim()) {
+      notify('Please fill Full Name and Contact Number.', 'error');
+      return false;
+    }
+    return true;
+  };
+
+  const validateStepTwo = () => {
+    const missing = getMissingFields();
+    if (missing.length) {
+      notify(`Please complete required fields: ${missing.join(', ')}`, 'error');
+      return false;
+    }
+
+    if (Number(data.amount) <= 0) {
+      notify('Amount must be greater than 0.', 'error');
+      return false;
+    }
+
+    if (data.startDate && data.endDate && new Date(data.endDate) < new Date(data.startDate)) {
+      notify('End Date must be on or after Start Date.', 'error');
+      return false;
+    }
+
+    return true;
+  };
+
+  const goToStepTwo = () => {
+    if (!validateStepOne()) return;
+    setStep(2);
+  };
+
+  const goToStepThree = () => {
+    if (!validateStepTwo()) return;
+    setStep(3);
+  };
+
   const downloadPDF = async () => {
-    const { pdf } = await capturePDF();
-    pdf.save(`${data.invoiceNo}.pdf`);
+    try {
+      if (!validateStepTwo()) return;
+      const { pdf } = await capturePDF();
+      pdf.save(`${data.invoiceNo}.pdf`);
+      notify('Invoice PDF downloaded.', 'success');
+    } catch (error) {
+      console.error(error);
+      notify('Could not generate PDF. Please try again.', 'error');
+    }
   };
 
   const sendEmail = async () => {
+    if (!validateStepTwo()) return;
+
     if (!emailConfig.serviceId || !emailConfig.templateId || !emailConfig.publicKey) {
-      alert('EmailJS keys are missing. Please configure .env first.');
+      notify('EmailJS keys are missing. Please configure .env first.', 'error');
       return;
     }
 
@@ -79,10 +147,10 @@ export default function App() {
         { publicKey: emailConfig.publicKey }
       );
 
-      alert('Invoice sent successfully!');
+      notify('Invoice sent successfully!', 'success');
     } catch (error) {
       console.error(error);
-      alert('Unable to send email. Please verify EmailJS template variables.');
+      notify('Unable to send email. Please verify EmailJS template variables.', 'error');
     } finally {
       setSending(false);
     }
@@ -90,6 +158,7 @@ export default function App() {
 
   return (
     <main className="min-h-screen px-4 py-7 sm:px-8 lg:px-10">
+      <ToastStack items={toasts} />
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -103,7 +172,17 @@ export default function App() {
             <p className="mt-2 text-sm text-zinc-400">Dynamic, animated, and export-ready receipts with EmailJS delivery.</p>
           </div>
           <StepTracker current={step} />
-          <FormPanel step={step} data={data} setData={setData} setStep={setStep} onDownload={downloadPDF} onSend={sendEmail} sending={sending} />
+          <FormPanel
+            step={step}
+            data={data}
+            setData={setData}
+            setStep={setStep}
+            onNextFromStep1={goToStepTwo}
+            onNextFromStep2={goToStepThree}
+            onDownload={downloadPDF}
+            onSend={sendEmail}
+            sending={sending}
+          />
         </section>
 
         <section>
