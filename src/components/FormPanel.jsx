@@ -17,6 +17,8 @@ export default function FormPanel({ step, data, setData, setStep, onNextFromStep
             <h2 className="mb-4 font-pop text-2xl font-bold">Member Details</h2>
             <label className="label">Full Name</label>
             <input required className="input mb-4" value={data.name} onChange={(e) => setField('name', e.target.value)} placeholder="e.g. Riya Sharma" />
+            <label className="label">Recipient Email</label>
+            <input required type="email" className="input mb-4" value={data.email || ''} onChange={(e) => setField('email', e.target.value)} placeholder="e.g. member@email.com" />
             <label className="label">Contact Number</label>
             <input required className="input mb-6" value={data.contact} onChange={(e) => setField('contact', e.target.value)} placeholder="e.g. +91 98765 43210" />
             <button onClick={onNextFromStep1} className="w-full rounded-xl bg-ember-gradient px-5 py-3 font-semibold text-white transition hover:scale-[1.01]">

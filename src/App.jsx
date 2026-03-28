@@ -13,6 +13,7 @@ const defaultState = {
   invoiceNo: generateInvoiceNumber(),
   date: new Date().toISOString().split('T')[0],
   name: '',
+  email: '',
   contact: '',
   packageType: '',
   startDate: '',
@@ -54,6 +55,7 @@ export default function App() {
   const getMissingFields = () => {
     const requiredFields = [
       ['name', 'Full Name'],
+      ['email', 'Email Address'],
       ['contact', 'Contact Number'],
       ['packageType', 'Package Type'],
       ['startDate', 'Start Date'],
@@ -65,8 +67,14 @@ export default function App() {
   };
 
   const validateStepOne = () => {
-    if (!data.name.trim() || !data.contact.trim()) {
-      notify('Please fill Full Name and Contact Number.', 'error');
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!data.name.trim() || !data.contact.trim() || !data.email.trim()) {
+      notify('Please fill Full Name, Email Address and Contact Number.', 'error');
+      return false;
+    }
+
+    if (!emailPattern.test(data.email.trim())) {
+      notify('Please enter a valid recipient email address.', 'error');
       return false;
     }
     return true;
@@ -124,13 +132,6 @@ export default function App() {
 
     try {
       setSending(true);
-      const { blob } = await capturePDF();
-      const attachment = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result?.toString().split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
 
       await emailjs.send(
         emailConfig.serviceId,
@@ -138,11 +139,11 @@ export default function App() {
         {
           subject: 'FitShapers Invoice',
           to_name: data.name,
-          message: `Hi ${data.name || 'Member'},\nThank you for joining FitShapers The Fitness Club.\nPlease find your invoice attached.\nStay consistent and keep pushing 💪`,
+          to_email: data.email,
+          message: `Hi ${data.name || 'Member'},\nThank you for joining FitShapers The Fitness Club.\nYour invoice details are shared below.\nStay consistent and keep pushing 💪`,
           invoice_number: data.invoiceNo,
           invoice_date: formatDate(data.date),
-          attachment,
-          filename: `${data.invoiceNo}.pdf`
+          amount: data.amount
         },
         { publicKey: emailConfig.publicKey }
       );
