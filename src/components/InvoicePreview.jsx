@@ -11,10 +11,10 @@ export default function InvoicePreview({ data, invoiceRef }) {
             <div>
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <img src="/logo.svg" alt="logo" className="h-14 w-14 rounded-full border border-zinc-300" />
+                  <img src="/logo.svg" alt="logo" className="h-20 w-20 rounded-full border border-zinc-300" />
                   <div>
                     <h1 className="font-pop text-3xl font-extrabold tracking-wide">FIT SHAPERS</h1>
-                    <p className="font-pop text-[32px] leading-none font-black uppercase">THE FITNESS CLUB</p>
+                    <p className="font-pop text-[20px] leading-none font-black uppercase">THE FITNESS CLUB</p>
                   </div>
                 </div>
                 <p className="max-w-[320px] text-right text-xs font-semibold leading-5 sm:text-sm">
@@ -23,7 +23,7 @@ export default function InvoicePreview({ data, invoiceRef }) {
                 </p>
               </div>
 
-              <div className="mb-6 grid grid-cols-2 gap-6 text-sm font-semibold">
+              <div className="mb-3 grid grid-cols-2 gap-3 text-sm font-semibold">
                 <p className="receipt-line">Invoice No: {data.invoiceNo}</p>
                 <p className="receipt-line text-right">Date: {formatDate(data.date)}</p>
               </div>
@@ -45,7 +45,7 @@ export default function InvoicePreview({ data, invoiceRef }) {
             <div className="relative z-10 flex items-end justify-between">
               <div>
                 <p className="text-sm font-bold">NON REFUNDABLE</p>
-                <div className="mt-2 w-32 border-2 border-zinc-800 p-2 text-4xl font-bold">₹</div>
+                <div className="mt-2 w-62 border-2 border-zinc-800 p-2 text-4xl font-bold">₹</div>
               </div>
               <p className="text-lg font-bold">Authorised Signatuary</p>
             </div>
