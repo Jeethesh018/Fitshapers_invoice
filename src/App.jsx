@@ -1,32 +1,32 @@
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import emailjs from '@emailjs/browser';
 import FormPanel from './components/FormPanel';
 import InvoicePreview from './components/InvoicePreview';
 import StepTracker from './components/StepTracker';
 import ToastStack from './components/ToastStack';
-import { formatDate, generateInvoiceNumber } from './utils/invoice';
+import { generateInvoiceNumber } from './utils/invoice';
 
 const defaultState = {
   invoiceNo: generateInvoiceNumber(),
   date: new Date().toISOString().split('T')[0],
   name: '',
-  email: '',
   contact: '',
   packageType: '',
   startDate: '',
   endDate: '',
-  amount: ''
+  amount: '',
+  advancePaid: ''
 };
 
 export default function App() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState(defaultState);
-  const [sending, setSending] = useState(false);
   const [toasts, setToasts] = useState([]);
   const invoiceRef = useRef(null);
+
+  const balanceAmount = Math.max(0, Number(data.amount || 0) - Number(data.advancePaid || 0));
 
   const notify = (message, type = 'success') => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -34,47 +34,32 @@ export default function App() {
     setTimeout(() => setToasts((prev) => prev.filter((toast) => toast.id !== id)), 3400);
   };
 
-  const emailConfig = useMemo(
-    () => ({
-      serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-      publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    }),
-    []
-  );
-
   const capturePDF = async () => {
     if (!invoiceRef.current) throw new Error('Invoice element not found');
     const canvas = await html2canvas(invoiceRef.current, { scale: 2, backgroundColor: '#f4f4f5', useCORS: true });
     const imageData = canvas.toDataURL('image/png');
     const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width, canvas.height] });
     pdf.addImage(imageData, 'PNG', 0, 0, canvas.width, canvas.height);
-    return { pdf, blob: pdf.output('blob') };
+    return { pdf };
   };
 
   const getMissingFields = () => {
     const requiredFields = [
       ['name', 'Full Name'],
-      ['email', 'Email Address'],
       ['contact', 'Contact Number'],
       ['packageType', 'Package Type'],
       ['startDate', 'Start Date'],
       ['endDate', 'End Date'],
-      ['amount', 'Amount']
+      ['amount', 'Amount'],
+      ['advancePaid', 'Advance Paid']
     ];
 
     return requiredFields.filter(([key]) => !String(data[key] ?? '').trim()).map(([, label]) => label);
   };
 
   const validateStepOne = () => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!data.name.trim() || !data.contact.trim() || !data.email.trim()) {
-      notify('Please fill Full Name, Email Address and Contact Number.', 'error');
-      return false;
-    }
-
-    if (!emailPattern.test(data.email.trim())) {
-      notify('Please enter a valid recipient email address.', 'error');
+    if (!data.name.trim() || !data.contact.trim()) {
+      notify('Please fill Full Name and Contact Number.', 'error');
       return false;
     }
     return true;
@@ -89,6 +74,16 @@ export default function App() {
 
     if (Number(data.amount) <= 0) {
       notify('Amount must be greater than 0.', 'error');
+      return false;
+    }
+
+    if (Number(data.advancePaid) < 0) {
+      notify('Advance Paid cannot be negative.', 'error');
+      return false;
+    }
+
+    if (Number(data.advancePaid) > Number(data.amount)) {
+      notify('Advance Paid cannot be greater than total Amount.', 'error');
       return false;
     }
 
@@ -122,44 +117,6 @@ export default function App() {
     }
   };
 
-  const sendEmail = async () => {
-    if (!validateStepTwo()) return;
-
-    if (!emailConfig.serviceId || !emailConfig.templateId || !emailConfig.publicKey) {
-      notify('EmailJS keys are missing. Please configure .env first.', 'error');
-      return;
-    }
-
-    try {
-      setSending(true);
-
-      await emailjs.send(
-        emailConfig.serviceId,
-        emailConfig.templateId,
-        {
-          subject: 'FitShapers Invoice',
-          package:data.packageType,
-          startDate:formatDate(data.startDate) ,
-          endDate:formatDate(data.endDate),
-          to_name: data.name,
-          to_email: data.email,
-          message: "Thank you for choosing FitShapers The Fitness Club.\n\nYour membership is now active.\nStay consistent, trust the process, and push your limits.\n\nLet’s build a stronger you 💪",
-          invoice_number: data.invoiceNo,
-          invoice_date: formatDate(data.date),
-          amount: data.amount
-        },
-        { publicKey: emailConfig.publicKey }
-      );
-
-      notify('Invoice sent successfully!', 'success');
-    } catch (error) {
-      console.error(error);
-      notify('Unable to send email. Please verify EmailJS template variables.', 'error');
-    } finally {
-      setSending(false);
-    }
-  };
-
   return (
     <main className="min-h-screen px-4 py-7 sm:px-8 lg:px-10">
       <ToastStack items={toasts} />
@@ -173,7 +130,7 @@ export default function App() {
           <div className="glass-card mb-4 p-5">
             <p className="text-xs uppercase tracking-[0.2em] text-orange-300">FitShapers Studio</p>
             <h1 className="font-pop text-3xl font-bold">Premium Invoice Dashboard</h1>
-            <p className="mt-2 text-sm text-zinc-400">Dynamic, animated, and export-ready receipts with EmailJS delivery.</p>
+            <p className="mt-2 text-sm text-zinc-400">Dynamic, animated, and export-ready receipts with one-click PDF download.</p>
           </div>
           <StepTracker current={step} />
           <FormPanel
@@ -184,13 +141,12 @@ export default function App() {
             onNextFromStep1={goToStepTwo}
             onNextFromStep2={goToStepThree}
             onDownload={downloadPDF}
-            onSend={sendEmail}
-            sending={sending}
+            balanceAmount={balanceAmount}
           />
         </section>
 
         <section>
-          <InvoicePreview data={data} invoiceRef={invoiceRef} />
+          <InvoicePreview data={data} invoiceRef={invoiceRef} balanceAmount={balanceAmount} />
         </section>
       </motion.div>
     </main>
