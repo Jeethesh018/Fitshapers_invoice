@@ -50,7 +50,16 @@ export default function InvoicePreview({ data, invoiceRef, balanceAmount }) {
                   ₹ {Number(data.amount || 0).toLocaleString('en-IN')}
                 </div>
               </div>
-              <p className="text-lg font-bold leading-none">Authorised Signatory</p>
+              <div className="flex min-w-[170px] flex-col items-center justify-end gap-1">
+                <div className="flex h-12 w-full items-end justify-center overflow-hidden">
+                  {data.signatureDataUrl ? (
+                    <img src={data.signatureDataUrl} alt="Authorised signature" className="max-h-12 w-auto object-contain" />
+                  ) : (
+                    <span className="text-[11px] text-zinc-500">No signature uploaded</span>
+                  )}
+                </div>
+                <p className="text-lg font-bold leading-none">Authorised Signatory</p>
+              </div>
             </div>
           </div>
         </div>

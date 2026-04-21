@@ -9,6 +9,17 @@ const slide = {
 export default function FormPanel({ step, data, setData, setStep, onNextFromStep1, onNextFromStep2, onDownload, balanceAmount }) {
   const setField = (key, value) => setData((prev) => ({ ...prev, [key]: value }));
 
+  const setSignature = (file) => {
+    if (!file) {
+      setField('signatureDataUrl', '');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => setField('signatureDataUrl', reader.result?.toString() || '');
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="glass-card p-6 lg:p-8">
       <AnimatePresence mode="wait">
@@ -33,11 +44,11 @@ export default function FormPanel({ step, data, setData, setStep, onNextFromStep
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className="label">Start Date</label>
-                <input required type="date" className="input" value={data.startDate} onChange={(e) => setField('startDate', e.target.value)} />
+                <input type="date" className="input" value={data.startDate} onChange={(e) => setField('startDate', e.target.value)} />
               </div>
               <div>
                 <label className="label">End Date</label>
-                <input required type="date" className="input" value={data.endDate} onChange={(e) => setField('endDate', e.target.value)} />
+                <input type="date" className="input" value={data.endDate} onChange={(e) => setField('endDate', e.target.value)} />
               </div>
             </div>
             <label className="label mt-4">Amount (₹)</label>
@@ -46,6 +57,13 @@ export default function FormPanel({ step, data, setData, setStep, onNextFromStep
             <input required min="0" type="number" className="input mb-4" value={data.advancePaid} onChange={(e) => setField('advancePaid', e.target.value)} placeholder="5000" />
             <label className="label">Balance Amount (₹)</label>
             <input readOnly className="input mb-6 cursor-not-allowed opacity-80" value={Number.isFinite(balanceAmount) ? balanceAmount : 0} />
+            <label className="label">Upload Signature (optional)</label>
+            <input
+              type="file"
+              accept="image/*"
+              className="input mb-6 file:mr-4 file:rounded-lg file:border-0 file:bg-orange-500/20 file:px-3 file:py-1 file:text-sm file:font-semibold file:text-orange-200"
+              onChange={(e) => setSignature(e.target.files?.[0])}
+            />
             <div className="flex gap-3">
               <button onClick={() => setStep(1)} className="w-1/3 rounded-xl border border-zinc-600 px-4 py-3">Back</button>
               <button onClick={onNextFromStep2} className="w-2/3 rounded-xl bg-ember-gradient px-4 py-3 font-semibold text-white">Go to Preview</button>

@@ -17,7 +17,8 @@ const defaultState = {
   startDate: '',
   endDate: '',
   amount: '',
-  advancePaid: ''
+  advancePaid: '',
+  signatureDataUrl: ''
 };
 
 export default function App() {
@@ -48,8 +49,6 @@ export default function App() {
       ['name', 'Full Name'],
       ['contact', 'Contact Number'],
       ['packageType', 'Package Type'],
-      ['startDate', 'Start Date'],
-      ['endDate', 'End Date'],
       ['amount', 'Amount'],
       ['advancePaid', 'Advance Paid']
     ];
