@@ -40,8 +40,8 @@ VITE_EMAILJS_PUBLIC_KEY=...
 
 ## 3) Logo
 
-- Current implementation ships with `public/logo.svg`.
-- If you want to use your exact provided logo file, replace `public/logo.svg` with your asset (same name), no code changes needed.
+- Current implementation ships with `public/logo_potrait.svg`.
+- If you want to use your exact provided logo file, replace `public/logo_potrait.svg` with your asset (same name), no code changes needed.
 
 ## 4) Build for production
 
