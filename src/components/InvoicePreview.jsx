@@ -5,13 +5,13 @@ export default function InvoicePreview({ data, invoiceRef, balanceAmount }) {
     <div className="glass-card overflow-hidden p-3">
       <div ref={invoiceRef} className="mx-auto w-full max-w-[840px] rounded-[28px] border-2 border-zinc-800 bg-[#f4f4f5] p-5 text-zinc-900 sm:p-7">
         <div className="relative min-h-[560px] rounded-[26px] border-2 border-zinc-900/90 p-4 sm:p-7">
-          <img src="/logo_potrait.svg" alt="FitShapers logo" className="pointer-events-none absolute left-1/2 top-1/2 w-[52%] -translate-x-1/2 -translate-y-1/2 opacity-[0.06]" />
+          <img src="/IMG-20260117-WA0017(6).jpg" alt="FitShapers logo" className="pointer-events-none absolute left-1/2 top-1/2 w-[52%] -translate-x-1/2 -translate-y-1/2 opacity-[0.06]" />
 
           <div className="relative z-10 flex h-full flex-col justify-between gap-5">
             <div>
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <img src="/logo_potrait.svg" alt="logo" className="h-14 w-14 rounded-full border border-zinc-300" />
+                  <img src="/IMG-20260117-WA0017(6).jpg" alt="logo" className="h-14 w-14 rounded-full border border-zinc-300" />
                   <div>
                     <h1 className="font-pop text-3xl font-extrabold tracking-wide">FIT SHAPERS</h1>
                     <p className="font-pop text-[32px] leading-none font-black uppercase">THE FITNESS CLUB</p>
