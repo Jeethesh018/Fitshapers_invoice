@@ -5,7 +5,7 @@ function ReceiptRow({ label, value, className = '' }) {
     <div className={`text-zinc-800 ${className}`}>
       <p className="mb-1 text-[13px] font-semibold sm:text-sm">{label}:</p>
       <div className="relative h-7 border-b border-dotted border-zinc-700/90">
-        <span className="absolute -top-1.5 left-2 bg-[#f4f4f5] px-1 text-sm font-bold sm:text-base">{value}</span>
+        <span className="absolute -top-1.5 left-2 bg-transparent px-1 text-sm font-bold sm:text-base">{value}</span>
       </div>
     </div>
   );
@@ -32,7 +32,7 @@ export default function InvoicePreview({ data, invoiceRef, balanceAmount }) {
                   </div>
                 </div>
                 <div className="max-w-[320px] text-right text-xs font-semibold leading-5 sm:text-sm">
-                  <div className="mb-1 inline-flex h-7 items-center rounded-full bg-zinc-900 px-3 text-[11px] font-bold text-white">
+                  <div className="mb-1 inline-flex h-7 items-center rounded-full px-2 text-[14px] font-bold text-zinc-900">
                     <span className="mr-1">☎</span> +91 8892788868 / +91 6362249181
                   </div>
                   <p>
@@ -44,7 +44,7 @@ export default function InvoicePreview({ data, invoiceRef, balanceAmount }) {
 
               <div className="mb-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-sm font-semibold">
                 <p className="receipt-line">Invoice No: {data.invoiceNo}</p>
-                <h2 className="mx-auto inline-flex h-9 items-center rounded-xl bg-zinc-900 px-6 font-pop text-xl font-black tracking-wide text-white shadow-[0_6px_14px_rgba(0,0,0,0.3)]">RECEIPT</h2>
+                <h2 className="mx-auto inline-flex h-9 items-center rounded-xl px-6 font-pop text-xl font-black tracking-wide text-zinc-900">RECEIPT</h2>
                 <p className="receipt-line text-right">Date: {formatDate(data.date)}</p>
               </div>
 
