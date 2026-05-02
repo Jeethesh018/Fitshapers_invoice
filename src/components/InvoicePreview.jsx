@@ -44,7 +44,7 @@ export default function InvoicePreview({ data, invoiceRef, balanceAmount }) {
 
               <div className="mb-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-sm font-semibold">
                 <p className="receipt-line">Invoice No: {data.invoiceNo}</p>
-                <h2 className="mx-auto inline-flex h-9 items-center rounded-xl px-6 font-pop text-xl font-black tracking-wide text-zinc-900">RECEIPT</h2>
+                <h2 className="mx-auto inline-flex h-9 min-w-[150px] items-center justify-center rounded-full border-2 border-zinc-900 px-6 font-pop text-xl font-black tracking-wide text-zinc-900">RECEIPT</h2>
                 <p className="receipt-line text-right">Date: {formatDate(data.date)}</p>
               </div>
 
@@ -62,7 +62,7 @@ export default function InvoicePreview({ data, invoiceRef, balanceAmount }) {
             <div className="relative z-10 mt-3 flex items-end justify-between gap-4">
               <div className="w-[70%] space-y-2">
                 <p className="text-base font-bold tracking-wide">NON REFUNDABLE</p>
-                <div className="h-10 w-full rounded border-2 border-zinc-800 bg-white/35 px-3 py-1 text-lg font-bold leading-8 shadow-inner">
+                <div className="flex h-10 w-full items-center rounded border-2 border-zinc-800 bg-white/35 px-4 text-lg font-bold leading-none shadow-inner">
                   ₹ {Number(data.amount || 0).toLocaleString('en-IN')}
                 </div>
               </div>
