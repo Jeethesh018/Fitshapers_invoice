@@ -40,8 +40,8 @@ VITE_EMAILJS_PUBLIC_KEY=...
 
 ## 3) Logo
 
-- Current implementation ships with `public/IMG-20260117-WA0017(6).jpg`.
-- If you want to use your exact provided logo file, replace `public/IMG-20260117-WA0017(6).jpg` with your asset (same name), no code changes needed.
+- Current implementation uses `public/1000135338-Photoroom~2.png` for the top-left logo and `public/1000135832-Photoroom.png` for the invoice watermark.
+- Keep those filenames in `public/` (or update the paths in `src/components/InvoicePreview.jsx` if you rename them).
 
 ## 4) Build for production
 
