@@ -44,8 +44,8 @@ export default function InvoicePreview({ data, invoiceRef, balanceAmount }) {
 
               <div className="mb-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-sm font-semibold">
                 <p className="receipt-line">Invoice No: {data.invoiceNo}</p>
-                <h2 className="mx-auto inline-flex h-9 min-w-[150px] -translate-y-4 items-center justify-center rounded-full border-2 border-zinc-900 px-6 font-pop text-xl font-black tracking-wide text-zinc-900">RECEIPT</h2>
-                <p className="receipt-line text-right">Date: {formatDate(data.date)}</p>
+               <h2 className="mx-auto inline-flex h-9 min-w-[150px] -translate-y-4 items-center justify-center rounded-full border-2 border-zinc-900 px-6 font-pop text-xl font-black tracking-wide text-zinc-900">RECEIPT</h2>
+              <p className="receipt-line text-right">Date: {formatDate(data.date)}</p>
               </div>
 
               <div className="space-y-3 text-sm sm:text-base">
