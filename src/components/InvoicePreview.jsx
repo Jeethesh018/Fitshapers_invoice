@@ -19,7 +19,7 @@ export default function InvoicePreview({ data, invoiceRef, balanceAmount }) {
         className="mx-auto w-full max-w-[840px] rounded-[28px] border-2 border-zinc-800 bg-[#f4f4f5] p-5 text-zinc-900 shadow-[0_18px_48px_rgba(0,0,0,0.28)] sm:p-7"
       >
         <div className="relative min-h-[560px] rounded-[26px] border-2 border-zinc-900/90 p-4 sm:p-7">
-          <img src="/1000135832-Photoroom.png" alt="FitShapers watermark" className="pointer-events-none absolute left-1/2 top-1/2 w-[52%] -translate-x-1/2 -translate-y-6/2 opacity-[0.06]" />
+          <img src="/1000135832-Photoroom.png" alt="FitShapers watermark" className="pointer-events-none absolute left-1/2 top-1/2 w-[52%] -translate-x-1/2 -translate-y-1/2 opacity-[0.06]" />
 
           <div className="relative z-10 flex h-full flex-col justify-between gap-5">
             <div>
