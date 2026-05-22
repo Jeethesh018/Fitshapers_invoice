@@ -61,10 +61,10 @@ export default function InvoicePreview({ data, invoiceRef, balanceAmount }) {
 
             <div className="relative z-10 mt-3 flex items-end justify-between gap-4">
               <div className="w-[70%] space-y-2">
+                <p className="text-base font-bold tracking-wide">NON REFUNDABLE</p>
                 <div className="flex h-10 w-full items-start rounded border-2 border-zinc-800 bg-white/35 px-4 pt-1 text-lg font-bold leading-none shadow-inner">
                   ₹ {Number(data.amount || 0).toLocaleString('en-IN')}
                 </div>
-                <p className="text-base font-bold tracking-wide">Total amount Paid</p>
               </div>
               <div className="flex min-w-[170px] flex-col items-center justify-end gap-1">
                 <div className="flex h-12 w-full items-end justify-center overflow-hidden">
